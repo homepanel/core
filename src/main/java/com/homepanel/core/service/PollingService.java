@@ -122,6 +122,8 @@ public abstract class PollingService<C extends ConfigTopic, T extends InterfaceT
         return new ArrayList<>();
     }
 
+    protected abstract SimpleThreadPool getSimpleThreadPool();
+
     /**
      * start scheduler
      */
@@ -180,7 +182,7 @@ public abstract class PollingService<C extends ConfigTopic, T extends InterfaceT
         }
 
         try {
-            SimpleThreadPool threadPool = new SimpleThreadPool(1, Thread.MIN_PRIORITY);
+            SimpleThreadPool threadPool = getSimpleThreadPool();
             JobStore jobStore = new RAMJobStore();
             threadPool.setInstanceName(POLLING_SCHEDULER_NAME);
             DirectSchedulerFactory.getInstance().createScheduler(POLLING_SCHEDULER_NAME, UUID.randomUUID().toString(), threadPool, jobStore);

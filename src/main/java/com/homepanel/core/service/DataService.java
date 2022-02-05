@@ -189,7 +189,7 @@ public abstract class DataService<C extends ConfigTopic, T extends InterfaceTopi
                                 interfaceTopicValue.setLastDateTime(LocalDateTime.now());
                             }
 
-                            onData(topic, val, PriorityThreadPoolExecutor.PRIORITY.HIGHEST);
+                            onData(topic, val, PriorityThreadPoolExecutor.PRIORITY.HIGH);
                         }
 
                         LOGGER.info("reading topic with path \"{}\" with value \"{}\"", topic.getPath(), val);
