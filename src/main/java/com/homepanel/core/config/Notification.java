@@ -4,6 +4,8 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlType;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @XmlType(name = "core-notification")
@@ -35,17 +37,19 @@ public class Notification {
 
         Boolean result = false;
 
-        if (getGroups() != null && !getGroups().isEmpty()) {
-            for (Group group : getGroups()) {
-                if (group.getName() != null && group.getName().equals(notification.getGroupName())) {
-                    result = isNotificationAllowed(notification.getPriority(), group.getThreshold() != null ? group.getThreshold() : getThreshold());
-                    if (result) {
-                        break;
+        if (notification.getValidUntil() == null || notification.getValidUntil().isAfter(LocalDateTime.now())) {
+            if (getGroups() != null && !getGroups().isEmpty()) {
+                for (Group group : getGroups()) {
+                    if (group.getName() != null && group.getName().equals(notification.getGroupName())) {
+                        result = isNotificationAllowed(notification.getPriority(), group.getThreshold() != null ? group.getThreshold() : getThreshold());
+                        if (result) {
+                            break;
+                        }
                     }
                 }
+            } else {
+                result = isNotificationAllowed(notification.getPriority(), getThreshold());
             }
-        } else {
-            result = isNotificationAllowed(notification.getPriority(), getThreshold());
         }
 
         return result;
